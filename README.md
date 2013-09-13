@@ -1,7 +1,7 @@
 django-grunt
 ============
 
-django-grunt provides management commands, settings, a view mixin and a
+django-grunt provides settings, management commands, a view mixin and a
 template context processor to improve your workflow using Grunt
 with Django.
 
@@ -16,13 +16,15 @@ are limitless if you put in the effort to build your own Grunt plugins.
 The problem is that typical Django projects use the staticfiles app for
 managing static files. Static files are usually stored in several
 locations without a common directory ancestor. Before you can use Grunt
-to manipulate your static files, you need to use the staticfiles app's
-`collectstatic` management command to collect all of your static files
-into one common directory.
+to manipulate your static files, you need to run the `collectstatic` management
+command to gather all of your static files into one common directory.
 
-After running Grunt on your collected static files, you probably want
-to use Django's `runserver` command to try out the collected static files
-that have been processed by Grunt in your browser.
+After running Grunt to process your collected static files, you need to change
+some settings and use the `runserver` management command to test out the
+processed files in your browser.
+
+django-grunt helps to simplify this process with management commands and
+template context variables.
 
 ### Installation and Usage
 
@@ -39,7 +41,7 @@ To use the management commands, you should add `"grunt"` to
 
 django-grunt provides two management commands to simplify your workflow:
 
-#### `manage.py grunt [grunt command ...] ([grunt option] | [collectstatic option] | [standard option])*`
+#### `manage.py grunt [grunt command ...]`
 
 This command runs Django's `collectstatic` command and then invokes `grunt`
 with the given `[grunt command ...]` labels.
@@ -48,12 +50,12 @@ If you have a Grunt `build` command set up in your Gruntfile.js configuration,
 you can run `manage.py grunt build` to collect your static files into the
 `settings.STATIC_ROOT` directory and then run `grunt build` on them.
 
-#### `manage.py gruntserver [runserver argument ...] ([gruntserver option] | [runserver option] | [standard option])*`
+#### `manage.py gruntserver [runserver argument ...]`
 
 This command configures your project's settings so that `runserver` will
 serve the files from `settings.STATIC_ROOT` and then invokes `runserver`.
 
-The command configures some settings values that you can pass to your templates
+It also configures some settings values that you can pass to your templates
 with the provided view mixin or context processor. These values can be used by
 your templates to decide which CSS and JavaScript sources to load.
 
@@ -68,10 +70,10 @@ django-grunt provides a view mixin and context processor that you can use
 to pass Grunt-related context variables to your templates. Both methods
 set boolean values named `grunt_js` and `grunt_css`, which your templates can
 use to decide whether to serve "normal" static files or static files which
-have been processed by Grunt. These values are `False` by default.
-The `gruntserver` management command sets them to `True`. Generally, you'll
-set them to `True` in your production server's settings file to serve files
-that have been combined, compressed or otherwise manipulated by Grunt.
+have been processed by Grunt. These values are `False` by default. Generally,
+they'll be `False` in development and `True` in your production server's
+settings file. The `gruntserver` management command sets them to `True` so you
+can simulate your production setup.
 
 The view mixin is located in `grunt.views.mixins.GruntConfigMixin`. You
 should call its `grunt_config()` method to retrieve or update a dictionary
@@ -114,12 +116,12 @@ Note that `django.views.generic.base.ContextMixin` is only available in
 Django 1.5+, so you'll need to make some adjustments for older versions of
 Django. The refactor of the generic view `get_context_data()` method into
 its own mixin base class was a great change, because it allows you to set
-up mixins like this example that safely call `super()` and only need
-to be mixed in through inheritance to override generic view functionality.
+up mixin classes like this that safely call `super()` and simply need to be
+inherited to override generic view functionality.
 
 If you're not using class-based views, or you're not ready to commit to
 providing your own generic view class overrides, you can alternatively
-add `"grunt.context_processors.grunt_config"` to your
+add `"grunt.context_processors.grunt_config"` to
 `TEMPLATE_CONTEXT_PROCESSORS` in your settings file. This will add the
 `grunt_js` and `grunt_css` boolean values to all of your templates whose
 views use a `RequestContext`.
