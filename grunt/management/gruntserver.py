@@ -14,30 +14,31 @@ class GruntserverCommandMixin(object):
     """
     option_list = (
         optparse.make_option("--no-grunt-js",
-            action="store_false", dest="use_build_js", default=True,
+            action="store_false", dest="grunt_js", default=True,
             help="Set settings.GRUNT_JS to False",
         ),
         optparse.make_option("--no-grunt-css",
-            action="store_false", dest="use_build_css", default=True,
+            action="store_false", dest="grunt_css", default=True,
             help="Set settings.GRUNT_CSS to False"),
         optparse.make_option("--no-gzip",
-            action="store_false", dest="use_gzip", default=True,
+            action="store_false", dest="gzip", default=True,
             help="Do NOT add gzip middleware"),)
     option_groups = (
-        ("[buildserver options]",
-            "These options configure settings and urls for runserver.",
+        ("[gruntserver options]",
+            "Configure runserver to serve the Grunt-processed files in "
+            "settings.STATIC_ROOT",
             option_list),)
-    option_names = ("use_build_js", "use_build_css", "use_gzip",)
+    option_names = ("grunt_js", "grunt_css", "gzip",)
     actions = ("buildserver",)
     
     def parse_option_use_build_js(self):
-        return bool(self.options.get("use_build_js", True))
+        return bool(self.options.get("grunt_js", True))
     
     def parse_option_use_build_css(self):
-        return bool(self.options.get("use_build_css", True))
+        return bool(self.options.get("grunt_css", True))
     
     def parse_option_use_gzip(self):
-        return bool(self.options.get("use_gzip", True))
+        return bool(self.options.get("gzip", True))
     
     def handle_buildserver(self):
         # Set up the staticfiles app to serve files in STATIC_ROOT.
@@ -50,12 +51,12 @@ class GruntserverCommandMixin(object):
         settings.STATIC_ROOT = ""
         
         # Add staticfiles handler to urls?
-        if self.options["use_gzip"]:
+        if self.options["gzip"]:
             urlconf = import_module(settings.ROOT_URLCONF)
             urlconf.urlpatterns = staticfiles_urlpatterns() + urlconf.urlpatterns
         
         # Use gzip middleware to compress staticfiles?
-        if self.options["use_gzip"]:
+        if self.options["gzip"]:
             if "django.middleware.gzip.GZipMiddleware" not in settings.MIDDLEWARE_CLASSES:
                 settings.MIDDLEWARE_CLASSES = (
                     "django.middleware.gzip.GZipMiddleware",
@@ -63,12 +64,12 @@ class GruntserverCommandMixin(object):
         
         # Force runserver to run with the "--nostatic" option so that the
         # middleware gets run for staticfiles requests?
-        if self.options["use_gzip"]:
+        if self.options["gzip"]:
             self.options["use_static_handler"] = False
         
         # Use compiled JavaScript and CSS in the templates?
-        settings.GRUNT_JS = self.options["use_build_js"]
-        settings.GRUNT_CSS = self.options["use_build_css"]
+        settings.GRUNT_JS = self.options["grunt_js"]
+        settings.GRUNT_CSS = self.options["grunt_css"]
 
 
 class GruntserverCommand(GruntserverCommandMixin, RunserverCommand):
@@ -89,7 +90,7 @@ class GruntserverCommand(GruntserverCommandMixin, RunserverCommand):
     actions = \
         GruntserverCommandMixin.actions + \
         RunserverCommand.actions
-    args = "[runserver argument ...] ([buildserver option] | [runserver option] | [standard option])*"
+    args = "[runserver argument ...] ([gruntserver option] | [runserver option] | [standard option])*"
     help = \
         "Starts a lightweight Web server for development and also serves "
-        "the built static files in STATIC_ROOT."
+        "the Grunt-processed static files in STATIC_ROOT."

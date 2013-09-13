@@ -15,12 +15,12 @@ class GruntCommandMixin(object):
     option_list = (
         optparse.make_option("--grunt-base",
             action="store", type="string", dest="grunt_base", default="",
-            help="Specify an alternate base path for Grunt. By default, all " \
+            help="Specify an alternate base path for Grunt. By default, all "
                 "file paths are relative to the Gruntfile."),
         optparse.make_option("--gruntfile",
             action="store", type="string", dest="gruntfile", default="",
-            help="Specify an alternate Gruntfile. By default, grunt looks " \
-                "in the current or parent directories for the nearest " \
+            help="Specify an alternate Gruntfile. By default, grunt looks "
+                "in the current or parent directories for the nearest "
                 "Gruntfile.js or Gruntfile.coffee file."),
         optparse.make_option("--grunt-debug",
             action="store_true", dest="grunt_debug", default=False,
