@@ -34,7 +34,7 @@ setup(
         "Topic :: Utilities",
     ],
     install_requires=[
-        "Django==1.4",
+        "Django>=1.4",
     ],
     packages=find_packages(exclude=["example", "example.*"]),
 )

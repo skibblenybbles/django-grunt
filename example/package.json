@@ -1,0 +1,26 @@
+{
+  "name": "django-grunt-example",
+  "version": "1.0.0b",
+  "description": "Example django-grunt JavaScript application.",
+  "main": "example.js",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/skibblenybbles/django-grunt"
+  },
+  "author": "Mike Kibbel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/skibblenybbles/django-grunt/issues"
+  },
+  "devDependencies": {
+    "grunt-cli": "~0.1.9",
+    "grunt": "~0.4.1",
+    "grunt-contrib-jshint": "~0.6.4"
+  }
+}

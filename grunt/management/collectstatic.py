@@ -20,7 +20,7 @@ class CollectstaticCommandMixin(object):
     ) + CollectStaticCommandBase.option_list[len(NoArgsCommand.option_list):]
     option_groups = (
         ("[collectstatic] commands",
-            "These options will be passed to collectstatic",
+            "These options will be passed to collectstatic.",
             option_list,
         ),)
     option_names = ("collect",)

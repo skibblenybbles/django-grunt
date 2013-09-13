@@ -25,7 +25,7 @@ class GruntserverCommandMixin(object):
             help="Do NOT add gzip middleware"),)
     option_groups = (
         ("[gruntserver options]",
-            "These options will be passed to gruntserver",
+            "These options will be passed to gruntserver.",
             option_list),)
     option_names = ("grunt_js", "grunt_css", "gzip",)
     actions = ("gruntserver",)
@@ -90,6 +90,6 @@ class GruntserverCommand(GruntserverCommandMixin, RunserverCommand):
         GruntserverCommandMixin.actions + \
         RunserverCommand.actions
     args = "[runserver argument ...] ([gruntserver option] | [runserver option] | [standard option])*"
-    help = \
+    help = (
         "Starts a lightweight Web server for development and serves "
-        "the Grunt-processed static files in STATIC_ROOT."
+        "the Grunt-processed static files in STATIC_ROOT.")

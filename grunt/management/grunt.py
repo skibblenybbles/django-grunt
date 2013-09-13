@@ -27,7 +27,7 @@ class GruntCommandMixin(object):
             help="Enable debugging mode for grunt tasks that support it."),)
     option_groups = (
         ("[grunt commands]",
-            "The options will be passed on to grunt.",
+            "These options will be passed on to grunt.",
             option_list),)
     option_names = ("grunt_base", "gruntfile",)
     actions = ("grunt",)
