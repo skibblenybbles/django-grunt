@@ -14,7 +14,7 @@ class RunserverCommandMixin(object):
     option_list = RunserverCommandBase.option_list[len(BaseCommand.option_list):]
     option_groups = (
         ("[runserver options]",
-            "These options will be passed through to runserver.",
+            "These options will be passed to runserver.",
             option_list,
         ),)
     option_names = ()
@@ -24,7 +24,6 @@ class RunserverCommandMixin(object):
         if self.options["verbosity"] >= 1:
             self.stdout.write(
                 "\n    > runserver\n\n")
-        
         management.call_command("runserver", *self.args, **self.options)
 
 

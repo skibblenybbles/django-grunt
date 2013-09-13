@@ -25,11 +25,10 @@ class GruntserverCommandMixin(object):
             help="Do NOT add gzip middleware"),)
     option_groups = (
         ("[gruntserver options]",
-            "Configure runserver to serve the Grunt-processed files in "
-            "settings.STATIC_ROOT",
+            "These options will be passed to gruntserver",
             option_list),)
     option_names = ("grunt_js", "grunt_css", "gzip",)
-    actions = ("buildserver",)
+    actions = ("gruntserver",)
     
     def parse_option_use_build_js(self):
         return bool(self.options.get("grunt_js", True))
@@ -40,7 +39,7 @@ class GruntserverCommandMixin(object):
     def parse_option_use_gzip(self):
         return bool(self.options.get("gzip", True))
     
-    def handle_buildserver(self):
+    def handle_gruntserver(self):
         # Set up the staticfiles app to serve files in STATIC_ROOT.
         settings.STATICFILES_FINDERS = (
             "django.contrib.staticfiles.finders.FileSystemFinder",
@@ -92,5 +91,5 @@ class GruntserverCommand(GruntserverCommandMixin, RunserverCommand):
         RunserverCommand.actions
     args = "[runserver argument ...] ([gruntserver option] | [runserver option] | [standard option])*"
     help = \
-        "Starts a lightweight Web server for development and also serves "
+        "Starts a lightweight Web server for development and serves "
         "the Grunt-processed static files in STATIC_ROOT."

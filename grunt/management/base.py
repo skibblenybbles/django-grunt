@@ -86,7 +86,7 @@ class BaseCommandMixin(object):
 
 class BaseCommand(BaseCommandMixin, Command):
     """
-    Standard Django management command.
+    Base Django management command.
     
     """
     pass

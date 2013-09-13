@@ -11,10 +11,10 @@ class QuietCommandMixin(object):
     option_list = (
         optparse.make_option("-q", "--quiet",
             action="store_true", dest="quiet", default=False,
-            help="Do NOT prompt or output anything."),)
+            help="Suppress all prompts and output."),)
     option_groups = ()
     option_names = ("quiet",)
-    quiet_names = (
+    quiet_option_names = (
         ("interactive", False),
         ("verbosity", 0),)
     actions = ()
@@ -22,7 +22,7 @@ class QuietCommandMixin(object):
     def parse_option_quiet(self):
         quiet = bool(self.options.get("quiet", False))
         if quiet:
-            for name, value in self.quiet_names:
+            for name, value in self.quiet_option_names:
                 self.options[name] = value
         return quiet
 

@@ -20,8 +20,7 @@ class CollectstaticCommandMixin(object):
     ) + CollectStaticCommandBase.option_list[len(NoArgsCommand.option_list):]
     option_groups = (
         ("[collectstatic] commands",
-            "These options will be passed through to collectstatic "
-            "unless --nocollect is specified.",
+            "These options will be passed to collectstatic",
             option_list,
         ),)
     option_names = ("collect",)
@@ -35,7 +34,6 @@ class CollectstaticCommandMixin(object):
             if self.options["verbosity"] >= 1:
                 self.stdout.write(
                     "\n    > collectstatic\n")
-            
             management.call_command("collectstatic", **self.options)
 
 
