@@ -12,12 +12,14 @@ def grunt_conf(config=None, key=None):
     if config is None:
         config = {}
     
+    grunt = config
+    
     if key is not None:
         if key not in config:
             config[key] = {}
-        config = config[key]
+        grunt = config[key]
     
-    config.update({
+    grunt.update({
         "grunt_js": getattr(settings, "GRUNT_JS", False),
         "grunt_css": getattr(settings, "GRUNT_CSS", False),
     })
