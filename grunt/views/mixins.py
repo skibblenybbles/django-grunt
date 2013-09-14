@@ -14,4 +14,4 @@ class GruntConfigMixin(object):
     def grunt_config(self, config=None, key=None):
         return grunt_conf(
             config={} if config is None else config,
-            key=key if key is None else self.grunt_config_key)
+            key=key if key is not None else self.grunt_config_key)
