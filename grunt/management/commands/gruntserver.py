@@ -1,2 +1,2 @@
-from ..gruntserver import GruntserverCommand as Command
+from ..gruntserver import GruntServerCommand as Command
 

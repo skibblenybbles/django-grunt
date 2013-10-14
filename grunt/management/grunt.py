@@ -1,13 +1,12 @@
 import optparse
-import os
-import subprocess
 
-from django.core.management.base import CommandError
+from django.core.management import CommandError
 
-from .collectstatic import CollectstaticCommand
+from commando import management
+from commando.django.contrib.staticfiles.management.collectstatic import CollectStaticCommand
 
 
-class GruntCommandMixin(object):
+class GruntCommandOptions(management.CommandOptions):
     """
     Grunt management command options.
     
@@ -41,59 +40,34 @@ class GruntCommandMixin(object):
     def parse_option_grunt_debug(self):
         return bool(self.options.get("grunt_debug", False))
     
-    def validate_grunt(self):
-        # Is grunt available?
-        with open(os.devnull, "w") as null:
-            try:
-                subprocess.check_call(("which", "grunt",),
-                    stdout=null, stderr=null)
-            except subprocess.CalledProcessError:
-                raise CommandError(
-                    "grunt is not available on the command line. Please ensure "
-                    "that grunt is installed and reachable in your $PATH.")
+    def validate_grunt(self, *arguments, **options):
+        self.check_program("grunt")
     
-    def handle_grunt(self):
-        if self.options["verbosity"] >= 1:
-            self.stdout.write(
-                "\n    > grunt {args:s}\n\n".format(
-                    args=" ".join(self.args)))
-        
-        with open(os.devnull, "w") as null:
-            try:
-                subprocess.check_call(
-                    ("grunt",) + \
-                        self.args + \
-                        (("--base", self.options["grunt_base"]) \
-                            if self.options["grunt_base"] \
-                            else ()) + \
-                        (("--gruntfile", self.options["gruntfile"]) \
-                            if self.options["gruntfile"] \
-                            else ()) + \
-                        (("--debug",) \
-                            if self.options["grunt_debug"] \
-                            else ()) + \
-                        (("--verbose",) \
-                            if self.options["verbosity"] >= 3 \
-                            else ()),
-                    stdout=self.stdout if self.options["verbosity"] >= 1 else null,
-                    stderr=self.stderr if self.options["verbosity"] >= 1 else null)
-            except subprocess.CalledProcessError, e:
-                raise CommandError(
-                    "grunt failed with exit code {code:d}.".format(
-                        code=e.returncode))
+    def handle_grunt(self, *arguments, **options):
+        return self.call_program("grunt",
+            *(tuple(arguments) + \
+                (("--base", self.options["grunt_base"]) \
+                    if self.options["grunt_base"] \
+                    else ()) + \
+                (("--gruntfile", self.options["gruntfile"]) \
+                    if self.options["gruntfile"] \
+                    else ()) + \
+                (("--debug",) \
+                    if self.options["grunt_debug"] \
+                    else ()) + \
+                (("--verbose",) \
+                    if self.options["verbosity"] >= 3 \
+                    else ())))
 
 
-class GruntCommand(GruntCommandMixin, CollectstaticCommand):
+class GruntCommand(GruntCommandOptions, CollectStaticCommand):
     option_list = \
-        CollectstaticCommand.option_list
+        CollectStaticCommand.option_list
     option_groups = \
-        GruntCommandMixin.option_groups + \
-        CollectstaticCommand.option_groups
-    option_names = \
-        GruntCommandMixin.option_names + \
-        CollectstaticCommand.option_names
+        GruntCommandOptions.option_groups + \
+        CollectStaticCommand.option_groups
     actions = \
-        CollectstaticCommand.actions + \
-        GruntCommandMixin.actions
+        CollectStaticCommand.actions + \
+        GruntCommandOptions.actions
     args = "[grunt command ...] ([grunt option] | [collectstatic option] | [standard option])*"
     help = "Collect static files in a single location and run grunt."

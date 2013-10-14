@@ -2,14 +2,16 @@ import optparse
 
 from django.conf import settings
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.core.management import CommandError
 from django.utils.importlib import import_module
 
-from .runserver import RunserverCommand
+from commando import management
+from commando.django.contrib.staticfiles.management.runserver import RunServerCommand
 
 
-class GruntserverCommandMixin(object):
+class GruntServerCommandOptions(management.CommandOptions):
     """
-    Gruntserver management command options.
+    GruntServer management command options.
     
     """
     option_list = (
@@ -39,7 +41,7 @@ class GruntserverCommandMixin(object):
     def parse_option_use_gzip(self):
         return bool(self.options.get("gzip", True))
     
-    def handle_gruntserver(self):
+    def handle_gruntserver(self, *arguments, **options):
         # Set up the staticfiles app to serve files in STATIC_ROOT.
         settings.STATICFILES_FINDERS = (
             "django.contrib.staticfiles.finders.FileSystemFinder",
@@ -71,7 +73,7 @@ class GruntserverCommandMixin(object):
         settings.GRUNT_CSS = self.options["grunt_css"]
 
 
-class GruntserverCommand(GruntserverCommandMixin, RunserverCommand):
+class GruntServerCommand(GruntServerCommandOptions, RunServerCommand):
     """
     Command that runs the staticfiles runserver command with the
     built static files in settings.STATIC_ROOT and sets
@@ -79,16 +81,13 @@ class GruntserverCommand(GruntserverCommandMixin, RunserverCommand):
     
     """
     option_list = \
-        RunserverCommand.option_list
+        RunServerCommand.option_list
     option_groups = \
-        GruntserverCommandMixin.option_groups + \
-        RunserverCommand.option_groups
-    option_names = \
-        GruntserverCommandMixin.option_names + \
-        RunserverCommand.option_names
+        GruntServerCommandOptions.option_groups + \
+        RunServerCommand.option_groups
     actions = \
-        GruntserverCommandMixin.actions + \
-        RunserverCommand.actions
+        GruntServerCommandOptions.actions + \
+        RunServerCommand.actions
     args = "[runserver argument ...] ([gruntserver option] | [runserver option] | [standard option])*"
     help = (
         "Starts a lightweight Web server for development and serves "

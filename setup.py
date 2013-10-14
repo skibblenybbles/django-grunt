@@ -35,6 +35,7 @@ setup(
     ],
     install_requires=[
         "Django>=1.4",
+        "django-commando>=0.1.1",
     ],
     packages=find_packages(exclude=["example", "example.*"]),
 )
