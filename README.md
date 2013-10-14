@@ -144,13 +144,11 @@ on other platforms. I wasn't satisfied with the various cross-platform
 hacks for this problem that I found with a cursory Web search, so
 this Django application is only useful on *nix platforms for now.
 
-The management commands were implemented by extending Django's command
-API with more declarative features. Since the `grunt` and `gruntserver`
-commands need to run other management commands, I built the API to
-easily accommodate multiple option groups and actions to perform. If
-you are writing complex management commands, the work here may help you
-get started. See `grunt.management.base` and `grunt.management.standard`
-to see my approach to this problem.
+The management command API that django-grunt previously defined has been
+extracted and expanded into its own project,
+[django-commando](https://github.com/skibblenybbles/django-commando). If
+you need to write, override or sequence existing management commands,
+consider using django-commando.
 
 This project currently lacks tests. I'm not feeling particularly motivated
 to figure out a decent way to test the management commands. The code is
